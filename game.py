@@ -15,7 +15,7 @@ def game():
     enemy = pygame.image.load('THINGS AND PARTICLESS/b6.png')
     enemy_x = int(random.randrange(60,1390))
     enemy_y = int(random.randrange(60,680))
-    enemy_speed = 3
+    enemy_speed = 10
     k = int(random.randrange(1,4))
     granica = 0
     limit = int(random.randrange(0,1000))
@@ -32,23 +32,33 @@ def game():
 
         
         if granica == limit:
-            k = int(random.randrange(1,10))
+            k = int(random.randrange(1,4))
             granica = 0
-            limit = int(random.randrange(0,1000))
+            limit = int(random.randrange(0,50))
         
-        if k == 1 and granica < limit and enemy_x < 1400:
+        if k == 1 and granica < limit and enemy_x <= 1400:
             enemy_x += enemy_speed
+            if enemy_x == 1400:
+              k = int(random.randrange(1,4))  
             
-        elif k == 2 and granica < limit and enemy_x > 50:
+        elif k == 2 and granica < limit and enemy_x >= 50:
             enemy_x -= enemy_speed
+            if enemy_x == 50:
+              k = int(random.randrange(1,4)) 
             
-        elif k == 3 and granica < limit and enemy_y < 690:
+        elif k == 3 and granica < limit and enemy_y <= 690:
             enemy_y += enemy_speed
+            if enemy_y == 690:
+              k = int(random.randrange(1,4)) 
             
-        elif k == 4 and granica < limit and enemy_y > 50:
+        elif k == 4 and granica < limit and enemy_y >= 50:
             enemy_y -= enemy_speed
+            if enemy_y == 50:
+              k = int(random.randrange(1,4)) 
             
         granica += 1
+
+
 
         key = pygame.key.get_pressed()
         if key[pygame.K_LEFT] and player_x > 50:
