@@ -29,9 +29,10 @@ class Enemy(pygame.sprite.Sprite):
             pygame.image.load('pic/sprites/enemy/right/middle.png'),
         ]
         self.image = self.walk_front[0]
-        self.x = int(random.randrange(60,1390))
-        self.y = int(random.randrange(60,680))
+        
         self.speed = speed
+        self.x = random.randrange(50, 1450, 50)
+        self.y = random.randrange(50, 750, 100)
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.x, self.y)
         self.storona = int(random.randrange(1,5))
@@ -39,6 +40,9 @@ class Enemy(pygame.sprite.Sprite):
         self.limit = int(random.randrange(0,100))
         self.anim_count = 0
         self.player_hit = False
+
+    # def set_spawn(self):
+        
 
 
     def move(self, walls):
@@ -49,16 +53,16 @@ class Enemy(pygame.sprite.Sprite):
 
         dx = dy = 0
 
-        if self.storona == 1 and self.rect.x > 50:
+        if self.storona == 1:
             dx = -self.speed
             self.image = self.walk_left[self.anim_count]
-        elif self.storona == 2 and self.rect.x < 1400:
+        elif self.storona == 2:
             dx = self.speed
             self.image = self.walk_right[self.anim_count]
-        elif self.storona == 3 and self.rect.y > 50:
+        elif self.storona == 3:
             dy = -self.speed
             self.image = self.walk_back[self.anim_count]
-        elif self.storona == 4 and self.rect.y < 690:
+        elif self.storona == 4:
             dy = self.speed
             self.image = self.walk_front[self.anim_count]
 

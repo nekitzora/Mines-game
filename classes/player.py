@@ -41,31 +41,32 @@ class Player(pygame.sprite.Sprite):
             pygame.image.load('pic/sprites/heart/4.png'),
         ]
         self.hp_image = self.hp_im[self.hp]
+        self.dead = False
         
 
     def move(self, key, walls):
         
         dx = dy = 0
 
-        if key[pygame.K_LEFT] and self.rect.x > 50:
+        if key[pygame.K_LEFT]:
             dx = -self.speed
             self.image = self.walk_left[self.anim_count]
             self.anim_count += 1
             if self.anim_count >= len(self.walk_left):
                 self.anim_count = 0
-        if key[pygame.K_RIGHT] and self.rect.x < 1400:
+        if key[pygame.K_RIGHT]:
             dx = self.speed
             self.image = self.walk_right[self.anim_count]
             self.anim_count += 1
             if self.anim_count >= len(self.walk_right):
                 self.anim_count = 0
-        if key[pygame.K_UP] and self.rect.y > 50:
+        if key[pygame.K_UP]:
             dy = -self.speed
             self.image = self.walk_back[self.anim_count]
             self.anim_count += 1
             if self.anim_count >= len(self.walk_back):
                 self.anim_count = 0
-        if key[pygame.K_DOWN] and self.rect.y < 690:
+        if key[pygame.K_DOWN]:
             dy = self.speed
             self.image = self.walk_front[self.anim_count]
             self.anim_count += 1
@@ -92,4 +93,4 @@ class Player(pygame.sprite.Sprite):
 
 
 
-player = Player(100, 100, 10)
+player = Player(50, 50, 10)

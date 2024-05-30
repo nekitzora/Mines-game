@@ -1,6 +1,6 @@
 import pygame
 import random
-from classes.wall import walls
+from Map import all_walls as walls
 from classes.enemy import enemies
 from classes.player import player
 
@@ -38,6 +38,7 @@ class Bomb(pygame.sprite.Sprite):
         self.player = player  # Store the player sprite
         self.steps_per_direction = []  # Random steps for each direction
         self.player_hit = False  # Track if the player has been hit
+        self.placed = False
 
     def spawn(self, x, y):
         self.rect.topleft = (x, y)
@@ -48,6 +49,7 @@ class Bomb(pygame.sprite.Sprite):
         self.current_direction = 0
         self.current_step = 1
         self.player_hit = False  # Reset player hit status for new bomb
+        self.placed = True
 
     def update(self):
         if self.active:
@@ -92,8 +94,7 @@ class Bomb(pygame.sprite.Sprite):
                         self.player.hp -= 1
                         self.player_hit = True  # Mark player as hit to prevent multiple deductions
                         if self.player.hp == 0:
-                            global gaming
-                            gaming = False
+                            player.dead = True
 
                     self.current_step += 1
                     if self.current_step > self.steps_per_direction[self.current_direction]:  # Use random steps per direction
@@ -105,6 +106,7 @@ class Bomb(pygame.sprite.Sprite):
 
             if self.current_direction >= len(self.explosion_directions):
                 self.current_direction = None  # Stop creating explosions when done
+                self.placed = False
 
 
     def draw_explosions(self, screen):

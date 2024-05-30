@@ -2,13 +2,16 @@ import pygame
 
 from classes.player import player
 # from classes.wall import destroying_walls as walls_mass
-from maps.Map import build_map
+# from maps.Map import build_map
+from Map import destroying_walls_mass as walls_mass
 from classes.key import keys
 from classes.key import kluch as keyy
 from classes.enemy import enemies
 from classes.door import door
 from classes.bomb import bomb
-from classes.wall import walls
+# from classes.wall import walls
+from Map import all_walls as walls
+from Map import print_map
 
 
 
@@ -27,16 +30,16 @@ def game(screen):
     
     all_sprites.add(door)
 
-    destroying_wall = build_map()
+    # destroying_wall = build_map()
 
     gaming = True
     while gaming:
         key = pygame.key.get_pressed()
-        if key[pygame.K_SPACE]:
+        if key[pygame.K_SPACE] and bomb.placed == False:
             bomb.spawn(player.rect.x, player.rect.y)
             all_sprites.add(bomb)
 
-        screen.fill((0, 0, 0))
+        screen.fill((0, 100, 0)) 
         
         player.move(key, walls)
 
@@ -60,6 +63,7 @@ def game(screen):
                 all_sprites.remove(bomb)  # Remove bomb sprite
 
         all_sprites.draw(screen)
+        print_map(screen)
 
         screen.blit(player.hp_im[player.hp], (1400, 100))
         
@@ -73,27 +77,32 @@ def game(screen):
         if door.opened:
             door.change()
 
-        if pygame.sprite.spritecollideany(player, enemies) and not enemy.player_hit:
-            player.hp -= 1
-            enemy.player_hit = True
+        # if pygame.sprite.spritecollideany(player, enemies) and not enemy.player_hit:
+        #     player.hp -= 1
+        #     enemy.player_hit = True
 
         if not pygame.sprite.spritecollideany(player, enemies):
             enemy.player_hit = False
 
         if player.hp == 0:
-            gaming = False
-            pygame.quit()
+            player.dead = True
 
         
 
         pygame.display.flip()
+
+        
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gaming = False
                 pygame.quit()
 
-        if pygame.sprite.collide_rect(player, door):
+        if pygame.sprite.collide_rect(player, door) and door.opened:
+            gaming = False
+            pygame.quit()
+
+        if player.dead:
             gaming = False
             pygame.quit()
 

@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class Door(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -14,4 +15,4 @@ class Door(pygame.sprite.Sprite):
         self.image = pygame.image.load('pic/door/door_opened.png')
 
 
-door = Door(1300, 400)
+door = Door(random.randrange(1050, 1450, 50), random.randrange(50, 750, 100))
