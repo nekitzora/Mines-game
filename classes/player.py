@@ -93,4 +93,3 @@ class Player(pygame.sprite.Sprite):
 
 
 
-player = Player(50, 50, 10)

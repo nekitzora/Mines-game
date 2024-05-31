@@ -1,8 +1,12 @@
 import pygame
 import random
 from Map import all_walls as walls
-from classes.enemy import enemies
-from classes.player import player
+from Map import enemies
+from Map import player
+# from main import screen
+from Map import keys
+from classes.key import Key
+# import data
 
 
 class Bomb(pygame.sprite.Sprite):
@@ -33,12 +37,13 @@ class Bomb(pygame.sprite.Sprite):
         self.explosion_directions = []
         self.current_direction = None
         self.current_step = 0
-        self.walls = walls  # Store the walls group
-        self.enemies = enemies  # Store the enemies group
-        self.player = player  # Store the player sprite
+        # self.walls = walls  # Store the walls group
+        # self.enemies = enemies  # Store the enemies group
+        # self.player = player  # Store the player sprite
         self.steps_per_direction = []  # Random steps for each direction
         self.player_hit = False  # Track if the player has been hit
         self.placed = False
+        self.killed_enemy_with_key = False
 
     def spawn(self, x, y):
         self.rect.topleft = (x, y)
@@ -78,22 +83,25 @@ class Bomb(pygame.sprite.Sprite):
             if 0 <= pos_x <= 1500 and 0 <= pos_y <= 790:  # Ensure within screen bounds
                 explosion = Explosion(pos_x, pos_y)
                 self.explosions.add(explosion)
-                if pygame.sprite.spritecollideany(explosion, self.walls):  # Stop if a wall is hit
+                if pygame.sprite.spritecollideany(explosion, walls):  # Stop if a wall is hit
                     self.current_direction += 1
                     self.current_step = 0
                 else:
                     # Check for collisions with enemies
-                    collided_enemies = pygame.sprite.spritecollide(explosion, self.enemies, True)
+                    collided_enemies = pygame.sprite.spritecollide(explosion, enemies, True)
                     if collided_enemies:
                         for enemy in collided_enemies:
-                            self.enemies.remove(enemy)
+                            if enemy.have_key:
+                                self.killed_enemy_with_key = True
+                                data.set_kluch_spawn()
+                            enemies.remove(enemy)
                             enemy.kill()
                 
                     # Check for collision with player
                     if not self.player_hit and pygame.sprite.collide_rect(explosion, self.player):
-                        self.player.hp -= 1
+                        player.player.hp -= 1
                         self.player_hit = True  # Mark player as hit to prevent multiple deductions
-                        if self.player.hp == 0:
+                        if player.player.hp == 0:
                             player.dead = True
 
                     self.current_step += 1

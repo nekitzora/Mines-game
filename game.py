@@ -1,12 +1,12 @@
 import pygame
 
-from classes.player import player
+from Map import player
 # from classes.wall import destroying_walls as walls_mass
 # from maps.Map import build_map
 from Map import destroying_walls_mass as walls_mass
-from classes.key import keys
+from Map import keys
 from classes.key import kluch as keyy
-from classes.enemy import enemies
+from Map import enemies
 from classes.door import door
 from classes.bomb import bomb
 # from classes.wall import walls

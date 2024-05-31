@@ -2,7 +2,7 @@ import pygame
 import random
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, speed):
+    def __init__(self, x, y, speed, have_key):
         super().__init__()
         self.walk_back = [
             pygame.image.load('pic/sprites/enemy/back/down.png'),
@@ -31,25 +31,28 @@ class Enemy(pygame.sprite.Sprite):
         self.image = self.walk_front[0]
         
         self.speed = speed
-        self.x = random.randrange(50, 1450, 50)
-        self.y = random.randrange(50, 750, 100)
+        # self.x = random.randrange(50, 1450, 50)
+        # self.y = random.randrange(50, 750, 100)
+        self.x = x
+        self.y = y
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.x, self.y)
         self.storona = int(random.randrange(1,5))
-        self.krok = 0
-        self.limit = int(random.randrange(0,100))
+        # self.krok = 0
+        # self.limit = int(random.randrange(0,100))
         self.anim_count = 0
         self.player_hit = False
+        self.have_key = have_key
 
     # def set_spawn(self):
         
 
 
     def move(self, walls):
-        if self.krok >= self.limit:
-            self.storona = int(random.randrange(1, 5))
-            self.krok = 0
-            self.limit = int(random.randrange(0, 50))
+        # if self.krok >= self.limit:
+        #     self.storona = int(random.randrange(1, 5))
+        #     self.krok = 0
+        #     self.limit = int(random.randrange(0, 50))
 
         dx = dy = 0
 
@@ -79,15 +82,8 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.y -= dy
             self.storona = int(random.randrange(1, 5))
 
-        self.krok += 1
+        # self.krok += 1
 
 
-enemy1 = Enemy(10)
-enemy2 = Enemy(10)
-enemy3 = Enemy(10)
-enemy4 = Enemy(10)
 
-
-enemies = pygame.sprite.Group()
-enemies.add(enemy1,enemy2,enemy3,enemy4)
 
