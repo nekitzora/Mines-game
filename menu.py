@@ -1,6 +1,6 @@
 import pygame
 
-
+#hui
 
 # Функція для відображення головного меню
 def main_menu():
