@@ -5,6 +5,7 @@ from data.objects.objects import *
 import draw
 clock = pygame.time.Clock()
 
+
 set_walls()
 set_enemy()
 
@@ -32,7 +33,6 @@ def game(screen):
         if klavisha[pygame.K_SPACE] and bomb.placed == False:
             spawn_bomb(bomb, player.rect.x, player.rect.y)
             all_sprites.add(bomb)
-            # spawn_key(kluch, player.rect.x, player.rect.y)
 
         if bomb.active:
             bomb_update(bomb)
@@ -50,12 +50,7 @@ def game(screen):
                 bomb.explosions.empty()  # Clear all explosion sprites
                 all_sprites.remove(bomb)  # Remove bomb sprite
 
-        # if bomb.killed_enemy_with_key:
-        #     for enemy in enemies:
-        #         if enemy.have_key:
-        #             kluch = Key(enemy.x, enemy.y)
-        #             keys.add(kluch)
-        #             all_sprites.add(keys)
+
 
 
         #frame

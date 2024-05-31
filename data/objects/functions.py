@@ -8,6 +8,7 @@ from .objects import player
 from .objects import enemies
 from .objects import bomb
 from .objects import key
+from .objects import d as door
 from .explosion import Explosion
 from .wall import Wall
 from .enemy import Enemy
@@ -22,6 +23,23 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 forbiden_coords = set()
+
+
+def set_door():
+    # random.randrange(1050, 1450, 50)
+    x = random.randrange(1050, 1450, 50)
+    y = random.randrange(50, 750, 100)
+    while (x, y) in forbiden_coords:
+        logging.debug(f"Forbiden coordinate ({x}, {y}) to door, generating again...")
+        x = random.randrange(1050, 1450, 50)
+        y = random.randrange(50, 750, 100)
+    logging.debug(f"Door added in ({x}, {y})")
+    forbiden_coords.add((x,y))
+    logging.debug(f"----------------------------------------------------------------")
+    spawn_door(door, x, y)
+
+def spawn_door(door, x, y):
+    door.rect.topleft = (x, y)
 
 
 def set_walls():
@@ -69,7 +87,7 @@ def set_walls():
             # forbiden_x.append(x)
             # forbiden_x.append(y)
 
-    
+    set_door()
 
     #destroying walls
 
@@ -92,7 +110,7 @@ def set_walls():
         #         y = random.randrange(150, 800, 50)
 
         while (x, y) in forbiden_coords:  # Проверка, если (x, y) уже в запрещенных координатах
-            logging.debug(f"Forbiden coordinate ({x}, {y}), generating again...")
+            logging.debug(f"Forbiden coordinate ({x}, {y}) to wall, generating again...")
             if teritoria == 1:
                 x = random.randrange(150, 1500, 50)
                 y = random.randrange(50, 800, 50)
@@ -107,6 +125,8 @@ def set_walls():
         # forbiden_y.append(y)
         forbiden_coords.add((x, y))
         teritoria = random.randrange(1, 3)
+
+    logging.debug(f"----------------------------------------------------------------")
 
     all_walls.add(not_destroying_walls, destroying_walls)
 
@@ -136,7 +156,7 @@ def set_enemy():
         #         y = random.randrange(150, 800, 50)
 
         while (x, y) in forbiden_coords:  # Проверка, если (x, y) уже в запрещенных координатах
-            logging.debug(f"Forbiden coordinate ({x}, {y}), generating again...")
+            logging.debug(f"Forbiden coordinate ({x}, {y}) to enemy, generating again...")
             if teritoria == 1:
                 x = random.randrange(150, 1500, 50)
                 y = random.randrange(50, 800, 50)

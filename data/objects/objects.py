@@ -29,7 +29,7 @@ destroying_walls_mass = []
 all_walls = pygame.sprite.Group()
 
 
-d = Door(random.randrange(1050, 1450, 50), random.randrange(50, 750, 100))
+d = Door()
 all_walls.add(d)
 door = pygame.sprite.Group()
 door.add(d)

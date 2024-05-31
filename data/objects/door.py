@@ -2,14 +2,14 @@ import pygame
 import random
 
 class Door(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self):
         super().__init__()
         self.opened = False
         self.image = pygame.image.load('data/pic/door/door_closed.png')
-        self.x = x
-        self.y = y
+        self.x = -50
+        self.y = -50
         self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
+        self.rect.topleft = (-50, -50)
 
     def change(self):
         self.image = pygame.image.load('data/pic/door/door_opened.png')
