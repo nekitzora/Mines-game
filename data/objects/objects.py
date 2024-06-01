@@ -5,6 +5,7 @@ from .enemy import Enemy
 from .player import Player
 from .wall import Wall
 from .key import Key
+from .upgrades import *
 
 import pygame
 import random
@@ -30,7 +31,7 @@ all_walls = pygame.sprite.Group()
 
 
 d = Door()
-all_walls.add(d)
+# all_walls.add(d)
 door = pygame.sprite.Group()
 door.add(d)
 
@@ -40,3 +41,10 @@ key = Key()
 keys = pygame.sprite.Group()
 keys.add(key)
 all_sprites.add(key)
+
+
+bomb_plus = Bomb_plus()
+health_plus = Health_plus()
+upgrades = pygame.sprite.Group()
+upgrades.add(bomb_plus, health_plus)
+all_sprites.add(upgrades)

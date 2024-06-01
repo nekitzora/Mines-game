@@ -16,9 +16,9 @@ def game(screen):
         
         # move
         klavisha = pygame.key.get_pressed()
-        player.move(klavisha, all_walls)
+        player.move(klavisha, all_walls, door)
         for enemy in enemies:
-            enemy.move(all_walls)
+            enemy.move(all_walls, door)
         
         #draw
         draw.draw(screen)
@@ -47,10 +47,36 @@ def game(screen):
                         destroying_walls_mass.remove(wall)
                         wall.kill()
             if all(not explosion.active for explosion in bomb.explosions):
-                bomb.explosions.empty()  # Clear all explosion sprites
-                all_sprites.remove(bomb)  # Remove bomb sprite
+                bomb.explosions.empty()
+                all_sprites.remove(bomb)
+
+        if pygame.sprite.spritecollideany(player, keys):
+            key.picked = True
+            all_sprites.remove(key)
+
+        if key.picked:
+            d.change()
+            d.opened = True
+
+        if player.escaped:
+            gaming = False
+            pygame.quit()
 
 
+        what = pygame.sprite.spritecollideany(player, upgrades)
+        if what:
+            despawn_upgrate(what)
+        
+        if player.hp == 0:
+            gaming = False
+            pygame.quit()
+
+        if pygame.sprite.spritecollideany(player, enemies) and not enemy.player_hit:
+            player.hp -= 1
+            enemy.player_hit = True
+
+        if not pygame.sprite.spritecollideany(player, enemies):
+            enemy.player_hit = False
 
 
         #frame

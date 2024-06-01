@@ -9,6 +9,7 @@ from .objects import enemies
 from .objects import bomb
 from .objects import key
 from .objects import d as door
+from .objects import health_plus, bomb_plus
 from .explosion import Explosion
 from .wall import Wall
 from .enemy import Enemy
@@ -91,7 +92,7 @@ def set_walls():
 
     #destroying walls
 
-    maximum = 100
+    maximum = 50
     teritoria = random.randrange(1,3)
     for i in range(1, maximum):
         if teritoria == 1:
@@ -136,16 +137,16 @@ def set_walls():
 
 
 def set_enemy():
-    maximum = 5
+    maximum = 10
     have_key = random.randrange(1, maximum + 1)
     teritoria = random.randrange(1,3)
     for i in range(1, maximum + 1):
         if teritoria == 1:
-            x = random.randrange(150, 1500, 50)
+            x = random.randrange(350, 1500, 50)
             y = random.randrange(50, 800, 50)
         else:
             x = random.randrange(50, 1500, 50)
-            y = random.randrange(150, 800, 50)
+            y = random.randrange(350, 800, 50)
         
         # while (x in forbiden_x) or (y in forbiden_y):  # Check if x and y are both in forbidden lists
         #     if teritoria == 1:
@@ -158,19 +159,20 @@ def set_enemy():
         while (x, y) in forbiden_coords:  # Проверка, если (x, y) уже в запрещенных координатах
             logging.debug(f"Forbiden coordinate ({x}, {y}) to enemy, generating again...")
             if teritoria == 1:
-                x = random.randrange(150, 1500, 50)
+                x = random.randrange(350, 1500, 50)
                 y = random.randrange(50, 800, 50)
             else:
                 x = random.randrange(50, 1500, 50)
-                y = random.randrange(150, 800, 50)
+                y = random.randrange(350, 800, 50)
 
         logging.debug(f"Enemy added in ({x}, {y})")
 
         if i == have_key:
-            enemy = Enemy(x, y, 10, True)
+            enemy = Enemy(x, y, 5, True)
         else:
-            enemy = Enemy(x, y, 10, False)
+            enemy = Enemy(x, y, 5, False)
         enemies.add(enemy)
+        forbiden_coords.add((x,y))
         # forbiden_x.append(x)
         # forbiden_y.append(y)  # Add enemy coordinates to forbidden lists to prevent other enemies from spawning here
         teritoria = random.randrange(1, 3)
@@ -187,7 +189,7 @@ def spawn_bomb(bomb, x, y):
     bomb.active = True  # Bomb is now active
     bomb.anim_count = 0  # Reset animation count
     bomb.explosion_directions = [(50, 0), (-50, 0), (0, 50), (0, -50)]  # Directions to check
-    bomb.steps_per_direction = [random.randint(1, 5) for _ in bomb.explosion_directions]  # Random steps for each direction
+    # bomb.steps_per_direction = [random.randint(1, 5) for _ in bomb.explosion_directions]  # Random steps for each direction
     bomb.current_direction = 0
     bomb.current_step = 1
     bomb.player_hit = False  # Reset player hit status for new bomb
@@ -229,7 +231,9 @@ def create_explosions(bomb):
                         for enemy in collided_enemies:
                             if enemy.have_key:
                                 spawn_key(key, enemy.rect.x, enemy.rect.y)
-                                
+                            luck = try_lucky()
+                            if luck != 'nothing':
+                                spawn_upgrate(luck, enemy.rect.x, enemy.rect.y)
 
                             enemies.remove(enemy)
                             enemy.kill()
@@ -241,7 +245,7 @@ def create_explosions(bomb):
                         player.dead = True
 
                 bomb.current_step += 1
-                if bomb.current_step > bomb.steps_per_direction[bomb.current_direction]:  # Use random steps per direction
+                if bomb.current_step > bomb.steps_per_direction:  # Use random steps per direction
                     bomb.current_direction += 1
                     bomb.current_step = 1
         else:
@@ -255,3 +259,25 @@ def create_explosions(bomb):
 
 def spawn_key(key, x, y):
     key.rect.topleft = (x, y)
+
+
+def try_lucky():
+    if random.randint(0, 100) < 25:  # 25% chance
+        item_type = random.choice(['health', 'bomb'])
+        return item_type
+    else:
+        return 'nothing'
+
+def spawn_upgrate(what, x, y):
+    if what == 'health':
+        health_plus.rect.topleft = (x, y)
+    else:
+        bomb_plus.rect.topleft = (x, y)
+
+def despawn_upgrate(what):
+    what.rect.topleft = (-50, -50)
+    if what.name == 'bomb':
+        bomb.steps_per_direction += 1
+    else:
+        if player.hp < 4:
+            player.hp += 1

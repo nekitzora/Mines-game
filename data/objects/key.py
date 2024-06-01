@@ -10,7 +10,4 @@ class Key(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (-50, -50)
 
-    # def spawn(self, x, y):
-    #     self.x = x
-    #     self.y = y
 

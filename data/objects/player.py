@@ -1,4 +1,5 @@
 import pygame
+# from .objects import door
 
 
 class Player(pygame.sprite.Sprite):
@@ -43,9 +44,10 @@ class Player(pygame.sprite.Sprite):
         ]
         self.hp_image = self.hp_im[self.hp]
         self.dead = False
+        self.escaped = False
         
 
-    def move(self, key, walls):
+    def move(self, key, walls, door):
         
         dx = dy = 0
 
@@ -75,7 +77,11 @@ class Player(pygame.sprite.Sprite):
                 self.anim_count = 0
             
         self.rect.x += dx
-        if pygame.sprite.spritecollideany(self, walls):
+        if pygame.sprite.spritecollideany(self, walls) or pygame.sprite.spritecollideany(self, door):
+            if pygame.sprite.spritecollideany(self, door):
+                for d in door:
+                    if d.opened:
+                        self.escaped = True
             self.rect.x -= dx
             if key[pygame.K_LEFT]:
                 self.image = self.stay[2]
@@ -83,7 +89,11 @@ class Player(pygame.sprite.Sprite):
                 self.image = self.stay[3]
 
         self.rect.y += dy
-        if pygame.sprite.spritecollideany(self, walls):
+        if pygame.sprite.spritecollideany(self, walls) or pygame.sprite.spritecollideany(self, door):
+            if pygame.sprite.spritecollideany(self, door):
+                for d in door:
+                    if d.opened:
+                        self.escaped = True
             self.rect.y -= dy
             if key[pygame.K_UP]:
                 self.image = self.stay[1]

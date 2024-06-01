@@ -38,8 +38,8 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.x, self.y)
         self.storona = int(random.randrange(1,5))
-        # self.krok = 0
-        # self.limit = int(random.randrange(0,100))
+        self.krok = 0
+        self.limit = int(random.randrange(50, 200, 50))
         self.anim_count = 0
         self.player_hit = False
         self.have_key = have_key
@@ -48,11 +48,11 @@ class Enemy(pygame.sprite.Sprite):
         
 
 
-    def move(self, walls):
-        # if self.krok >= self.limit:
-        #     self.storona = int(random.randrange(1, 5))
-        #     self.krok = 0
-        #     self.limit = int(random.randrange(0, 50))
+    def move(self, walls, door):
+        if self.krok >= self.limit:
+            self.storona = int(random.randrange(1, 5))
+            self.krok = 0
+            self.limit = int(random.randrange(50, 200, 50))
 
         dx = dy = 0
 
@@ -73,16 +73,16 @@ class Enemy(pygame.sprite.Sprite):
 
 
         self.rect.x += dx
-        if pygame.sprite.spritecollideany(self, walls):
+        if pygame.sprite.spritecollideany(self, walls) or pygame.sprite.spritecollideany(self, door):
             self.rect.x -= dx
             self.storona = int(random.randrange(1, 5))
 
         self.rect.y += dy
-        if pygame.sprite.spritecollideany(self, walls):
+        if pygame.sprite.spritecollideany(self, walls) or pygame.sprite.spritecollideany(self, door):
             self.rect.y -= dy
             self.storona = int(random.randrange(1, 5))
 
-        # self.krok += 1
+        self.krok += 1
 
 
 
