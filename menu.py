@@ -1,101 +1,102 @@
 import pygame
 
-#hui
-
-# Функція для відображення головного меню
 def main_menu():
-
-    # Ініціалізація Pygame
     pygame.init()
+    pygame.mixer.init()
 
-    # Розміри вікна
     screen_width, screen_height = 1500, 790
     screen = pygame.display.set_mode((screen_width, screen_height))
-    pygame.display.set_caption("Main menu")
+    pygame.display.set_caption("Bomberman")
 
-    icon = pygame.image.load("Mines-game/pic/background/menu.jpeg")
+    icon = pygame.image.load("Mines-game/pic/background/mainmenu.png")
     pygame.display.set_icon(icon)
 
-    # Кольори
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
+    BUTTON_COLOR = (50, 50, 50)
+    BUTTON_HOVER_COLOR = (70, 70, 70)
+    ARROW_COLOR = (255, 255, 255) 
 
-    # Завантаження фонового зображення
-    background_menu = pygame.image.load("Mines-game/pic/background/menu.jpeg")
+    background_menu = pygame.image.load("Mines-game/pic/background/mainmenu.png")
     background_menu = pygame.transform.scale(background_menu, (screen_width, screen_height))
+
+    pygame.mixer.music.load("Mines-game/pic/music/titlescreen_sound.mp3") 
+    pygame.mixer.music.play(-1)  
+
+    pixel_font = pygame.font.Font("Mines-game/pic/fonts/joystix monospace.otf", 40) 
+
+    owner_image = pygame.image.load("Mines-game/pic/background/owners.png")  
+    owner_image = pygame.transform.scale(owner_image, (screen_width, screen_height))
+
     running = True
-    
-    while running:
-        screen.blit(background_menu, (0, 0))  # Відображення фонового зображення
+    show_owner_screen = False
+     
+    while running:   
+        screen.fill(WHITE)  
 
-        # Текст "Головне меню"
-        font = pygame.font.SysFont(None, 60)
-        text = font.render("Main menu", True, BLACK)
-        text_rect = text.get_rect(center=(screen_width // 2, 100))
-        screen.blit(text, text_rect)
+        if show_owner_screen:
+            screen.blit(owner_image, (0, 0)) 
+            close_button = pygame.Rect(screen_width - 50, 10, 40, 40)
+            pygame.draw.rect(screen, BUTTON_COLOR, close_button)
+            pygame.draw.line(screen, WHITE, (screen_width - 45, 15), (screen_width - 15, 45), 3)
+            pygame.draw.line(screen, WHITE, (screen_width - 45, 45), (screen_width - 15, 15), 3)
+        else:
+            screen.blit(background_menu, (0, 0)) 
 
-        # Створення кнопок
-        button_width, button_height = 250, 50
-        start_button = pygame.Rect((screen_width - button_width) // 2, 200, button_width, button_height)
-        about_button = pygame.Rect((screen_width - button_width) // 2, 270, button_width, button_height)
-        controls_button = pygame.Rect((screen_width - button_width) // 2, 340, button_width, button_height)
-        how_to_play_button = pygame.Rect((screen_width - button_width) // 2, 410, button_width, button_height)
-        owner_button = pygame.Rect((screen_width - button_width) // 2, 480, button_width, button_height)
+            button_width, button_height = 365, 45
+            button_padding = 65
+            start_button = pygame.Rect((screen_width - button_width) // 2, 370, button_width, button_height)
+            controls_button = pygame.Rect((screen_width - button_width) // 2, 370 + button_padding, button_width, button_height)
+            how_to_play_button = pygame.Rect((screen_width - button_width) // 2, 370 + 2 * button_padding, button_width, button_height)
+            owners_button = pygame.Rect((screen_width - button_width) // 2, 370 + 3 * button_padding, button_width, button_height)
+            exit_button = pygame.Rect((screen_width - button_width) // 2, 370 + 4 * button_padding, button_width, button_height)
 
-        # Кнопка "Почати гру"
-        pygame.draw.rect(screen, BLACK, start_button)
-        text = font.render("Почати гру", True, WHITE)
-        text_rect = text.get_rect(center=start_button.center)
-        screen.blit(text, text_rect)
+            buttons = [
+                (start_button, "Start Game"),
+                (controls_button, "Controls"),
+                (how_to_play_button, "How to play"),
+                (owners_button, "Owners"),
+                (exit_button, "Exit")
+            ]
 
-        # Кнопка "About us"
-        pygame.draw.rect(screen, BLACK, about_button)
-        text = font.render("About us", True, WHITE)
-        text_rect = text.get_rect(center=about_button.center)
-        screen.blit(text, text_rect)
+            mouse_pos = pygame.mouse.get_pos()
 
-        # Кнопка "Controls"
-        pygame.draw.rect(screen, BLACK, controls_button)
-        text = font.render("Controls", True, WHITE)
-        text_rect = text.get_rect(center=controls_button.center)
-        screen.blit(text, text_rect)
+            for button, text in buttons:
+                if button.collidepoint(mouse_pos):
+                    pygame.draw.rect(screen, BUTTON_HOVER_COLOR, button)
 
-        # Кнопка "How to play"
-        pygame.draw.rect(screen, BLACK, how_to_play_button)
-        text = font.render("How to play", True, WHITE)
-        text_rect = text.get_rect(center=how_to_play_button.center)
-        screen.blit(text, text_rect)
+                    left_arrow = [(button.left - 20, button.centery), (button.left - 10, button.centery - 10), (button.left - 10, button.centery + 10)]
+                    right_arrow = [(button.right + 20, button.centery), (button.right + 10, button.centery - 10), (button.right + 10, button.centery + 10)]
+                    pygame.draw.polygon(screen, ARROW_COLOR, left_arrow)
+                    pygame.draw.polygon(screen, ARROW_COLOR, right_arrow)
+                else:
+                    pygame.draw.rect(screen, BUTTON_COLOR, button)
+                
+                text_surface = pixel_font.render(text, True, WHITE)
+                text_rect = text_surface.get_rect(center=button.center)
+                screen.blit(text_surface, text_rect)
 
-        # Кнопка "Owner"
-        pygame.draw.rect(screen, BLACK, owner_button)
-        text = font.render("Owner", True, WHITE)
-        text_rect = text.get_rect(center=owner_button.center)
-        screen.blit(text, text_rect)
-
-        # Оновлення екрану
         pygame.display.flip()
 
-        # Обробка подій
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                if about_button.collidepoint(mouse_pos):
-                    # Оновлення екрану з текстом "Ми студенти ТУКЕ"
-                    screen.fill(WHITE)
-                    about_text = font.render("Ми студенти ТУКЕ", True, BLACK)
-                    text_rect = about_text.get_rect(center=(screen_width // 2, screen_height // 2))
-                    screen.blit(about_text, text_rect)
-                    pygame.display.flip()
+                if show_owner_screen:
+                    if close_button.collidepoint(mouse_pos):
+                        show_owner_screen = False
+                else:
+                    for button, text in buttons:
+                        if button.collidepoint(mouse_pos) and text == "Exit":
+                            pygame.quit()
+                            running = False
+                        elif button.collidepoint(mouse_pos):
+                            if text == "Owners":
+                                show_owner_screen = True
+                            elif text: 
+                                print(f"Clicked {text}")
 
-                    # Цикл для очікування натискання кнопки Enter
-                    waiting = True
-                    while waiting:
-                        for event in pygame.event.get():
-                            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                                waiting = False
-
-# Виклик функції для відображення головного меню
-#main_menu()
+if __name__ == "__main__":
+    main_menu() 
