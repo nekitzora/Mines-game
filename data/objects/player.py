@@ -2,6 +2,7 @@ import pygame
 # from .objects import door
 
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, start_x, start_y, speed):
         super().__init__()
