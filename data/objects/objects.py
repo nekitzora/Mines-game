@@ -6,11 +6,16 @@ from .player import Player
 from .wall import Wall
 from .key import Key
 from .upgrades import *
+from .sound import GameSound
 
 import pygame
 import random
 
 # ennf = E
+pygame.mixer.init()
+sound_bomb = GameSound('data/sound/bomb.mp3')
+sound_damage = GameSound('data/sound/damage.mp3')
+sound_arena = GameSound('data/sound/arena.mp3')
 
 
 player = Player(50, 50, 10)

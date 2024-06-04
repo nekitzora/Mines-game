@@ -13,16 +13,20 @@ from .objects import health_plus, bomb_plus
 from .explosion import Explosion
 from .wall import Wall
 from .enemy import Enemy
+# from .sound import GameSound
+from .objects import sound_bomb, sound_damage
 import pygame
 import random
 
-# forbiden_x = []
-# forbiden_y = []
 
-import logging
 
-logging.basicConfig(level=logging.DEBUG)
 
+
+
+
+
+
+enemies_mass = []
 forbiden_coords = set()
 
 
@@ -31,12 +35,14 @@ def set_door():
     x = random.randrange(1050, 1450, 50)
     y = random.randrange(50, 750, 100)
     while (x, y) in forbiden_coords:
-        logging.debug(f"Forbiden coordinate ({x}, {y}) to door, generating again...")
+
+        print(f"Forbiden coordinate ({x}, {y}) to door, generating again...")
         x = random.randrange(1050, 1450, 50)
         y = random.randrange(50, 750, 100)
-    logging.debug(f"Door added in ({x}, {y})")
+
+    print(f"Door added in ({x}, {y})")
     forbiden_coords.add((x,y))
-    logging.debug(f"----------------------------------------------------------------")
+    print(f"----------------------------------------------------------------")
     spawn_door(door, x, y)
 
 def spawn_door(door, x, y):
@@ -111,7 +117,8 @@ def set_walls():
         #         y = random.randrange(150, 800, 50)
 
         while (x, y) in forbiden_coords:  # Проверка, если (x, y) уже в запрещенных координатах
-            logging.debug(f"Forbiden coordinate ({x}, {y}) to wall, generating again...")
+
+            print(f"Forbiden coordinate ({x}, {y}) to wall, generating again...")
             if teritoria == 1:
                 x = random.randrange(150, 1500, 50)
                 y = random.randrange(50, 800, 50)
@@ -119,7 +126,7 @@ def set_walls():
                 x = random.randrange(50, 1500, 50)
                 y = random.randrange(150, 800, 50)
 
-        logging.debug(f"Wall added in ({x}, {y})")
+        print(f"Wall added in ({x}, {y})")
         wall = Wall(x, y, True)
         destroying_walls.add(wall)
         # forbiden_x.append(x)
@@ -127,7 +134,8 @@ def set_walls():
         forbiden_coords.add((x, y))
         teritoria = random.randrange(1, 3)
 
-    logging.debug(f"----------------------------------------------------------------")
+
+    print(f"----------------------------------------------------------------")
 
     all_walls.add(not_destroying_walls, destroying_walls)
 
@@ -148,16 +156,10 @@ def set_enemy():
             x = random.randrange(50, 1500, 50)
             y = random.randrange(350, 800, 50)
         
-        # while (x in forbiden_x) or (y in forbiden_y):  # Check if x and y are both in forbidden lists
-        #     if teritoria == 1:
-        #         x = random.randrange(150, 1500, 50)
-        #         y = random.randrange(50, 800, 50)
-        #     else:
-        #         x = random.randrange(50, 1500, 50)
-        #         y = random.randrange(150, 800, 50)
 
-        while (x, y) in forbiden_coords:  # Проверка, если (x, y) уже в запрещенных координатах
-            logging.debug(f"Forbiden coordinate ({x}, {y}) to enemy, generating again...")
+        while (x, y) in forbiden_coords: 
+
+            print(f"Forbiden coordinate ({x}, {y}) to enemy, generating again...")
             if teritoria == 1:
                 x = random.randrange(350, 1500, 50)
                 y = random.randrange(50, 800, 50)
@@ -165,16 +167,16 @@ def set_enemy():
                 x = random.randrange(50, 1500, 50)
                 y = random.randrange(350, 800, 50)
 
-        logging.debug(f"Enemy added in ({x}, {y})")
+
+        print(f"Enemy added in ({x}, {y})")
 
         if i == have_key:
             enemy = Enemy(x, y, 5, True)
         else:
             enemy = Enemy(x, y, 5, False)
         enemies.add(enemy)
+        enemies_mass.append(enemy)
         forbiden_coords.add((x,y))
-        # forbiden_x.append(x)
-        # forbiden_y.append(y)  # Add enemy coordinates to forbidden lists to prevent other enemies from spawning here
         teritoria = random.randrange(1, 3)
 
     all_sprites.add(enemies)
@@ -213,8 +215,15 @@ def bomb_update(bomb):
     else:
         create_explosions(bomb)  # Create explosions sequentially
 
+
+# was = 0
+
 def create_explosions(bomb):
     if bomb.current_direction is not None:
+        # global was
+        if sound_bomb.played == False:    
+            sound_bomb.sound.play()
+            sound_bomb.change_played()
         direction = bomb.explosion_directions[bomb.current_direction]
         x, y = bomb.rect.topleft
         pos_x = x + direction[0] * bomb.current_step
@@ -240,6 +249,7 @@ def create_explosions(bomb):
 
                 if not bomb.player_hit and pygame.sprite.collide_rect(explosion, player):
                     player.hp -= 1
+                    sound_damage.sound.play()
                     bomb.player_hit = True  # Mark player as hit to prevent multiple deductions
                     if player.hp == 0:
                         player.dead = True
@@ -255,6 +265,10 @@ def create_explosions(bomb):
         if bomb.current_direction >= len(bomb.explosion_directions):
             bomb.current_direction = None  # Stop creating explosions when done
             bomb.placed = False
+            # global was
+            # was = 0
+            if sound_bomb.played == True:
+                sound_bomb.change_played()
 
 
 def spawn_key(key, x, y):
@@ -281,3 +295,4 @@ def despawn_upgrate(what):
     else:
         if player.hp < 4:
             player.hp += 1
+

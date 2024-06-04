@@ -6,6 +6,8 @@ import draw
 clock = pygame.time.Clock()
 
 
+
+
 set_walls()
 set_enemy()
 
@@ -13,6 +15,9 @@ set_enemy()
 def game(screen):
     gaming = True
     while gaming:
+        if not sound_arena.played:    
+            sound_arena.sound.play(-1)
+            sound_arena.change_played()
         
         # move
         klavisha = pygame.key.get_pressed()
@@ -37,6 +42,7 @@ def game(screen):
         if bomb.active:
             bomb_update(bomb)
         elif not bomb.active:
+            # sound_bomb.play()
             create_explosions(bomb)
             draw.draw_explosions(bomb, screen)
             for explosion in bomb.explosions:
@@ -74,6 +80,7 @@ def game(screen):
         if pygame.sprite.spritecollideany(player, enemies) and not enemy.player_hit:
             player.hp -= 1
             enemy.player_hit = True
+            sound_damage.sound.play()
 
         if not pygame.sprite.spritecollideany(player, enemies):
             enemy.player_hit = False
