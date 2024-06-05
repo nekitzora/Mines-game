@@ -1,16 +1,16 @@
 import pygame
 import time
 import math
+import game
 
-def main_menu():
-    pygame.init()
+def main_menu(screen):
     pygame.mixer.init()
 
-    screen_width, screen_height = 1500, 790
+    screen_width, screen_height = 1550, 850
     screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption("Bomberman")
 
-    icon = pygame.image.load("Mines-game/pic/main_image.jpeg")
+    icon = pygame.image.load("data/pic/main_image.jpeg")
     pygame.display.set_icon(icon)
 
     WHITE = (255, 255, 255)
@@ -19,21 +19,21 @@ def main_menu():
     BUTTON_HOVER_COLOR = (70, 70, 70)
     ARROW_COLOR = (255, 255, 255)
 
-    background_menu = pygame.image.load("Mines-game/pic/background/mainmenu.png")
+    background_menu = pygame.image.load("data/pic/background/mainmenu.png")
     background_menu = pygame.transform.scale(background_menu, (screen_width, screen_height))
 
-    pygame.mixer.music.load("Mines-game/pic/music/titlescreen_sound.mp3")
+    pygame.mixer.music.load("data/sound/menu.mp3")
     pygame.mixer.music.play(-1)
 
-    pixel_font = pygame.font.Font("Mines-game/pic/fonts/joystix monospace.otf", 40)
+    pixel_font = pygame.font.Font("data/pic/fonts/joystix monospace.otf", 40)
 
-    owner_image = pygame.image.load("Mines-game/pic/background/owners.png")
+    owner_image = pygame.image.load("data/pic/background/owners.png")
     owner_image = pygame.transform.scale(owner_image, (screen_width, screen_height))
 
-    controls_image = pygame.image.load("Mines-game/pic/background/controls.png")
+    controls_image = pygame.image.load("data/pic/background/controls.png")
     controls_image = pygame.transform.scale(controls_image, (screen_width, screen_height))
 
-    loading_image = pygame.image.load("Mines-game/pic/background/loading.png")
+    loading_image = pygame.image.load("data/pic/background/loading.png")
     loading_image = pygame.transform.scale(loading_image, (screen_width, screen_height))
 
     running = True
@@ -70,11 +70,11 @@ def main_menu():
                 pygame.mixer.music.stop()
 
             elapsed_time = time.time() - loading_start_time
-            if elapsed_time >= 15:
-                pygame.quit()
+            if elapsed_time >= 8:
+                game.game(screen)
                 running = False
             else:
-                time_per_dot = 0.5  # Time in seconds for each dot to fade in and out
+                time_per_dot = 0.5
                 dot_index = int((elapsed_time % (num_dots * time_per_dot)) // time_per_dot)
                 current_dot_time = elapsed_time % time_per_dot
                 if current_dot_time > time_per_dot / 2:
@@ -145,5 +145,6 @@ def main_menu():
                             elif text == "Start Game":
                                 show_loading_screen = True
 
-if __name__ == "__main__":
-    main_menu()
+#if __name__ == "__main__":
+ #   main_menu()
+
