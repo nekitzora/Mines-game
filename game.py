@@ -28,9 +28,10 @@ def game(screen):
             sound_arena.change_played()
         
         klavisha = pygame.key.get_pressed()
-        player.move(klavisha, all_walls, door)
-        for enemy in enemies:
-            enemy.move(all_walls, door)
+        if not paused:
+            player.move(klavisha, all_walls, door)
+            for enemy in enemies:
+                enemy.move(all_walls, door)
         
         draw.draw(screen)
 
@@ -77,13 +78,13 @@ def game(screen):
 
             pygame.display.flip()
 
-        if klavisha[pygame.K_SPACE] and bomb.placed == False:
+        if klavisha[pygame.K_SPACE] and not bomb.placed and not paused:
             spawn_bomb(bomb, player.rect.x, player.rect.y)
             all_sprites.add(bomb)
 
-        if bomb.active:
+        if bomb.active and not paused:
             bomb_update(bomb)
-        elif not bomb.active:
+        elif not bomb.active and not paused:
             create_explosions(bomb)
             draw.draw_explosions(bomb, screen)
             for explosion in bomb.explosions:
