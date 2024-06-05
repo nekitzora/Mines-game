@@ -17,7 +17,7 @@ def game(screen):
     paused = False
     font = pygame.font.Font("data/pic/fonts/joystix monospace.otf", 36)
 
-    enter_pressed = False  # Флаг для отслеживания нажатия клавиши Enter
+    enter_pressed = False
 
     while gaming:
         if not sound_arena.played:    
@@ -38,13 +38,13 @@ def game(screen):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     paused = not paused
-                    enter_pressed = False  # Сброс флага при нажатии ESCAPE
-                elif event.key == pygame.K_RETURN:  # Проверка нажатия клавиши Enter
-                    if not enter_pressed:  # Если клавиша Enter не была нажата ранее
+                    enter_pressed = False
+                elif event.key == pygame.K_RETURN: 
+                    if not enter_pressed:
                         enter_pressed = True
-                    else:  # Если клавиша Enter была нажата ранее
+                    else:
                         paused = not paused
-                        enter_pressed = False  # Сброс флага при нажатии ENTER
+                        enter_pressed = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if return_rect.collidepoint(pygame.mouse.get_pos()):
                     paused = False
@@ -110,7 +110,7 @@ def game(screen):
             despawn_upgrate(what)
         
         if player.hp == 0:
-            screen.fill((0, 0, 0))  # Очистим экран
+            screen.fill((0, 0, 0))
             lose_font = pygame.font.Font(None, 100)
             lose_text = lose_font.render("YOU LOSE", True, (255, 0, 0))
             restart_text = font.render("Restart", True, (255, 255, 255))
@@ -129,11 +129,9 @@ def game(screen):
                         pygame.quit()
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         if restart_rect.collidepoint(pygame.mouse.get_pos()):
-                            # Перезапуск игры
                             game(screen)
                         elif menu_rect.collidepoint(pygame.mouse.get_pos()):
-                            # Возврат в главное меню
-                            sound_arena.stop()  # Остановка музыки
+                            sound_arena.stop()
                             main.main()
 
         if pygame.sprite.spritecollideany(player, enemies) and not enemy.player_hit:
