@@ -240,9 +240,10 @@ def create_explosions(bomb):
                         for enemy in collided_enemies:
                             if enemy.have_key:
                                 spawn_key(key, enemy.rect.x, enemy.rect.y)
-                            luck = try_lucky()
-                            if luck != 'nothing':
-                                spawn_upgrate(luck, enemy.rect.x, enemy.rect.y)
+                            else:
+                                luck = try_lucky()
+                                if luck != 'nothing':
+                                    spawn_upgrate(luck, enemy.rect.x, enemy.rect.y)
 
                             enemies.remove(enemy)
                             enemy.kill()
