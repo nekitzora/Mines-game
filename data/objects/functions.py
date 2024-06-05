@@ -30,6 +30,15 @@ enemies_mass = []
 forbiden_coords = set()
 
 
+def set_player():
+    player.x = 50
+    player.y = 50
+    player.rect.x = 50
+    player.rect.y = 50
+    player.image = player.stay[0]
+    all_sprites.add(player)
+
+
 def set_door():
     # random.randrange(1050, 1450, 50)
     x = random.randrange(1050, 1450, 50)
@@ -297,3 +306,14 @@ def despawn_upgrate(what):
         if player.hp < 4:
             player.hp += 1
 
+
+
+def delete_all():
+    # for wall in not_destroying_walls:
+    not_destroying_walls.empty()
+    destroying_walls.empty()
+    destroying_walls_mass.clear()
+    enemies.empty()
+    all_walls.empty()
+    all_sprites.empty()
+    
