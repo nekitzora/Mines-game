@@ -69,6 +69,8 @@ def game(screen):
                     sound_arena.sound.stop()
                     delete_all()
                     despawn_player()
+                    sound_loss.sound.stop()
+                    sound_win.sound.stop()
                     main.main()
 
                 if game_over or win:
