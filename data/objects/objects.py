@@ -16,6 +16,8 @@ pygame.mixer.init()
 sound_bomb = GameSound('data/sound/bomb.mp3')
 sound_damage = GameSound('data/sound/damage.mp3')
 sound_arena = GameSound('data/sound/arena.mp3')
+sound_loss = GameSound("data/sound/defeat.mp3")
+sound_win = GameSound("data/sound/victory.mp3")  
 
 
 player = Player(50, 50, 10)
@@ -48,8 +50,8 @@ keys.add(key)
 all_sprites.add(key)
 
 
-bomb_plus = Bomb_plus()
-health_plus = Health_plus()
+# bomb_plus = Bomb_plus()
+# health_plus = Health_plus()
 upgrades = pygame.sprite.Group()
-upgrades.add(bomb_plus, health_plus)
+# upgrades.add(bomb_plus, health_plus)
 all_sprites.add(upgrades)

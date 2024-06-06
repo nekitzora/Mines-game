@@ -7,23 +7,35 @@ from .objects import all_walls
 from .objects import player
 from .objects import enemies
 from .objects import bomb
-from .objects import key
+from .objects import key, keys
 from .objects import d as door
-from .objects import health_plus, bomb_plus
+# from .objects import health_plus, bomb_plus
+from .upgrades import Health_plus, Bomb_plus
+from .objects import upgrades
 from .explosion import Explosion
 from .wall import Wall
 from .enemy import Enemy
 # from .sound import GameSound
-from .objects import sound_bomb, sound_damage
+from .objects import sound_arena, sound_bomb, sound_damage, sound_loss, sound_win
 import pygame
 import random
 
+# maximum_wall = random.randrange(1, 250)
+# maximum_enemy = random.randrange(1, 30)
+
+# def validate_coordinate_range():
+    
+#     required_coordinates = maximum_wall + maximum_enemy  # Пример: 50 стен и 3 врага
+#     possible_coordinates = len(range(50, 1500, 50)) * len(range(50, 800, 50))
+#     if required_coordinates <= possible_coordinates:
+#         return True
+#     else:
+#         return False
 
 
-
-
-
-
+# while validate_coordinate_range():
+#     maximum_wall = random.randrange(1, 250)
+#     maximum_enemy = random.randrange(1, 30) 
 
 
 enemies_mass = []
@@ -31,12 +43,23 @@ forbiden_coords = set()
 
 
 def set_player():
+    key.picked = False
+    key.rect.topleft = (-50, -50)
+    keys.add(key)
+    all_sprites.add(key)
+    bomb.steps_per_direction = 1
+    player.hp = 4
+    player.dead = False
+    player.escaped = False
     player.x = 50
     player.y = 50
     player.rect.x = 50
     player.rect.y = 50
     player.image = player.stay[0]
     all_sprites.add(player)
+    # all_sprites.add(health_plus, bomb_plus)
+
+    
 
 
 def set_door():
@@ -56,6 +79,8 @@ def set_door():
 
 def spawn_door(door, x, y):
     door.rect.topleft = (x, y)
+    door.opened = False
+    door.change_close()
 
 
 def set_walls():
@@ -107,9 +132,9 @@ def set_walls():
 
     #destroying walls
 
-    maximum = 50
+    maximum_wall = random.randrange(1, 100)
     teritoria = random.randrange(1,3)
-    for i in range(1, maximum):
+    for i in range(1, maximum_wall):
         if teritoria == 1:
             x = random.randrange(150, 1500, 50)
             y = random.randrange(50, 800, 50)
@@ -154,10 +179,10 @@ def set_walls():
 
 
 def set_enemy():
-    maximum = 10
-    have_key = random.randrange(1, maximum + 1)
+    maximum_enemy = random.randrange(1, 15)
+    have_key = random.randrange(1, maximum_enemy + 1)
     teritoria = random.randrange(1,3)
-    for i in range(1, maximum + 1):
+    for i in range(1, maximum_enemy + 1):
         if teritoria == 1:
             x = random.randrange(350, 1500, 50)
             y = random.randrange(50, 800, 50)
@@ -293,19 +318,28 @@ def try_lucky():
         return 'nothing'
 
 def spawn_upgrate(what, x, y):
-    if what == 'health':
+    if what == 'health' and player.hp < 4:
+        health_plus = Health_plus()
         health_plus.rect.topleft = (x, y)
+        all_sprites.add(health_plus)
+        upgrades.add(health_plus)
     else:
+        bomb_plus = Bomb_plus()
         bomb_plus.rect.topleft = (x, y)
+        all_sprites.add(bomb_plus)
+        upgrades.add(bomb_plus)
 
 def despawn_upgrate(what):
-    what.rect.topleft = (-50, -50)
+    upgrades.remove(what)
+    all_sprites.remove(what)
     if what.name == 'bomb':
         bomb.steps_per_direction += 1
     else:
         if player.hp < 4:
             player.hp += 1
 
+def despawn_player():
+    player.rect.topleft = (-100, -100)
 
 
 def delete_all():
@@ -317,3 +351,10 @@ def delete_all():
     all_walls.empty()
     all_sprites.empty()
     
+
+def set_music():
+    sound_arena.played = False
+    sound_bomb.played = False
+    sound_damage.played = False
+    sound_win.played = False
+    sound_loss.played = False

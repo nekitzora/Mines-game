@@ -11,7 +11,10 @@ class Door(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (-50, -50)
 
-    def change(self):
+    def change_open(self):
         self.image = pygame.image.load('data/pic/door/door_opened.png')
+
+    def change_close(self):
+        self.image = pygame.image.load('data/pic/door/door_closed.png')
 
 

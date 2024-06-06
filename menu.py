@@ -70,7 +70,7 @@ def main_menu(screen):
                 pygame.mixer.music.stop()
 
             elapsed_time = time.time() - loading_start_time
-            if elapsed_time >= 8:
+            if elapsed_time >= 3:
                 game.game(screen)
                 running = False
             else:
@@ -120,31 +120,31 @@ def main_menu(screen):
                 text_rect = text_surface.get_rect(center=button.center)
                 screen.blit(text_surface, text_rect)
 
-        pygame.display.flip()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                if show_owner_screen or show_controls_screen:
-                    if close_button.collidepoint(mouse_pos):
-                        show_owner_screen = False
-                        show_controls_screen = False
-                else:
-                    for button, text in buttons:
-                        if button.collidepoint(mouse_pos):
-                            if text == "Exit":
-                                pygame.quit()
-                                running = False
-                            elif text == "Owners":
-                                show_owner_screen = True
-                            elif text == "Controls":
-                                show_controls_screen = True
-                            elif text == "Start Game":
-                                show_loading_screen = True
+        if running:
+            pygame.display.flip()
 
-#if __name__ == "__main__":
- #   main_menu()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if show_owner_screen or show_controls_screen:
+                        if close_button.collidepoint(mouse_pos):
+                            show_owner_screen = False
+                            show_controls_screen = False
+                    else:
+                        for button, text in buttons:
+                            if button.collidepoint(mouse_pos):
+                                if text == "Exit":
+                                    running = False
+                                elif text == "Owners":
+                                    show_owner_screen = True
+                                elif text == "Controls":
+                                    show_controls_screen = True
+                                elif text == "Start Game":
+                                    show_loading_screen = True
+
+if __name__ == "__main__":
+   main_menu()
 
