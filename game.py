@@ -5,16 +5,13 @@ import main
 from data.objects.functions import *
 from data.objects.objects import *
 
-
-
+pygame.init()
 clock = pygame.time.Clock()
 
+set_walls()
+set_enemy()
 
 def game(screen):
-
-    set_walls()
-    set_enemy()
-    set_player()
 
     gaming = True
     paused = False
@@ -32,10 +29,11 @@ def game(screen):
             sound_arena.change_played()
         
         klavisha = pygame.key.get_pressed()
-        if not paused:
-            player.move(klavisha, all_walls, door)
-            for enemy in enemies:
-                enemy.move(all_walls, door)
+        if not game_over and not win:  
+            if not paused: 
+                player.move(klavisha, all_walls, door) 
+                for enemy in enemies:
+                    enemy.move(all_walls, door)
         
         draw.draw(screen)
 
@@ -46,7 +44,7 @@ def game(screen):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     paused = not paused
-                    enter_pressed = False
+                    enter_pressed = False  
                 elif event.key == pygame.K_RETURN: 
                     if not enter_pressed:
                         enter_pressed = True
@@ -176,4 +174,4 @@ def game(screen):
 if __name__ == "__main__":
     screen = pygame.display.set_mode((1550, 850))
     sound_arena = GameSound("data/sound/arena.mp3")
-    game(screen) 
+    game(screen)
