@@ -8,8 +8,6 @@ from data.objects.objects import *
 pygame.init()
 clock = pygame.time.Clock()
 
-
-
 def game(screen):
 
     set_walls()
@@ -27,6 +25,9 @@ def game(screen):
     game_over = False 
     win = False  
 
+    return_rect = None
+    menu_rect = None
+
     while gaming:
         if not sound_arena.played:    
             sound_arena.sound.play(-1)
@@ -34,7 +35,6 @@ def game(screen):
 
         if not win and not game_over:
             klavisha = pygame.key.get_pressed()
-        # if not game_over and not win:  
         if not paused: 
             player.move(klavisha, all_walls, door) 
             for enemy in enemies:
@@ -56,9 +56,23 @@ def game(screen):
                     else:
                         paused = not paused
                         enter_pressed = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if return_rect and return_rect.collidepoint(pygame.mouse.get_pos()):
+                    paused = False
+
+                if menu_rect and menu_rect.collidepoint(pygame.mouse.get_pos()):
+                    paused = False
+                    game_over = False
+                    win = False
+                    gaming = False
+                    sound_arena.sound.stop()
+                    delete_all()
+                    despawn_player()
+                    main.main()
+
                 if game_over or win:
-                    if menu_rect.collidepoint(event.pos):
+                    if menu_rect and menu_rect.collidepoint(event.pos):
                         paused = False
                         game_over = False
                         win = False
@@ -70,7 +84,6 @@ def game(screen):
                         sound_win.sound.stop()
                         main.main()
 
-        # if not game_over and not win:
         if paused:
             pause_surface = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
             pause_surface.fill((0, 0, 0, 128))
@@ -177,14 +190,10 @@ def game(screen):
 
             screen.blit(win_text, win_rect)
             screen.blit(menu_text, menu_rect)
-
-
-        
+      
         if gaming:
             clock.tick(15)
         
-        
-
 if __name__ == "__main__":
     screen = pygame.display.set_mode((1550, 850))
     sound_arena = GameSound("data/sound/arena.mp3")
