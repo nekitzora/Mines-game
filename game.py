@@ -104,7 +104,7 @@ def game(screen):
             screen.blit(return_text, return_rect)
             screen.blit(menu_text, menu_rect)
 
-        if klavisha[pygame.K_SPACE] and not bomb.placed:
+        if klavisha[pygame.K_SPACE] and not bomb.placed and not paused:
             spawn_bomb(bomb, player.rect.x, player.rect.y)
             all_sprites.add(bomb)
 
