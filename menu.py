@@ -49,6 +49,8 @@ def main_menu(screen):
     dot_brightness = 255
     dot_fade_speed = 0.5
 
+    load = random.randrange(1, 11)
+
     while running:
         screen.fill(WHITE)
 
@@ -71,7 +73,7 @@ def main_menu(screen):
                 pygame.mixer.music.stop()
 
             elapsed_time = time.time() - loading_start_time
-            if elapsed_time >= random.randrange(1, 11):
+            if elapsed_time >= load:
                 game.game(screen)
                 running = False
             #else:
