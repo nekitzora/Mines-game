@@ -2,6 +2,7 @@ import pygame
 import time
 import math
 import game
+import random
 
 def main_menu(screen):
     pygame.mixer.init()
@@ -33,7 +34,7 @@ def main_menu(screen):
     controls_image = pygame.image.load("data/pic/background/controls.png")
     controls_image = pygame.transform.scale(controls_image, (screen_width, screen_height))
 
-    loading_image = pygame.image.load("data/pic/background/loading.png")
+    loading_image = pygame.image.load("data/pic/background/loading.jpg")
     loading_image = pygame.transform.scale(loading_image, (screen_width, screen_height))
 
     running = True
@@ -70,22 +71,24 @@ def main_menu(screen):
                 pygame.mixer.music.stop()
 
             elapsed_time = time.time() - loading_start_time
-            if elapsed_time >= 3:
+            if elapsed_time >= random.randrange(1, 11):
                 game.game(screen)
                 running = False
-            else:
-                time_per_dot = 0.5
-                dot_index = int((elapsed_time % (num_dots * time_per_dot)) // time_per_dot)
-                current_dot_time = elapsed_time % time_per_dot
-                if current_dot_time > time_per_dot / 2:
-                    dot_brightness = 255 - int(255 * ((current_dot_time - time_per_dot / 2) / (time_per_dot / 2)))
-                else:
-                    dot_brightness = int(255 * (current_dot_time / (time_per_dot / 2)))
-
-                for i in range(num_dots):
-                    brightness = dot_brightness if i == dot_index else 255
-                    dot_color = (brightness, brightness, brightness)
-                    pygame.draw.circle(screen, dot_color, (screen_width // 2 - ((num_dots - 1) * dot_spacing) // 2 + i * dot_spacing, screen_height - 50), dot_radius)
+            #else:
+            #    time_per_dot = 0.5
+            #    dot_index = int((elapsed_time % (num_dots * time_per_dot)) // time_per_dot)
+             #   current_dot_time = elapsed_time % time_per_dot
+            #    if current_dot_time > time_per_dot / 2:
+            #        dot_brightness = 255 - int(255 * ((current_dot_time - time_per_dot / 2) / (time_per_dot / 2)))
+             #   else:
+             #       dot_brightness = int(255 * (current_dot_time / (time_per_dot / 2)))
+        
+             #   for i in range(num_dots):
+             #       brightness = dot_brightness if i == dot_index else 255
+             #       dot_color = (brightness, brightness, brightness)
+             #       x_pos = screen_width - (num_dots - i) * (dot_spacing + dot_radius)
+             #       y_pos = screen_height - dot_radius - 10
+              #      pygame.draw.circle(screen, dot_color, (x_pos, y_pos), dot_radius)
         else:
             screen.blit(background_menu, (0, 0))
 
@@ -147,4 +150,3 @@ def main_menu(screen):
 
 if __name__ == "__main__":
    main_menu()
-
